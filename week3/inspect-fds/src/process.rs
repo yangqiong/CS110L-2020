@@ -1,6 +1,5 @@
 use crate::open_file::OpenFile;
-#[allow(unused)] // TODO: delete this line for Milestone 3
-use std::fs;
+use std::{fmt::format, fs};
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Process {
@@ -20,10 +19,29 @@ impl Process {
     /// information will commonly be unavailable if the process has exited. (Zombie processes
     /// still have a pid, but their resources have already been freed, including the file
     /// descriptor table.)
-    #[allow(unused)] // TODO: delete this line for Milestone 3
     pub fn list_fds(&self) -> Option<Vec<usize>> {
-        // TODO: implement for Milestone 3
-        unimplemented!();
+        let fd_dir = format!("/proc/{}/fd", self.pid);
+        let mut files: Vec<usize> = vec![];
+        match fs::read_dir(fd_dir) {
+            Ok(dir) => {
+                for path in dir {
+                    match path {
+                        Ok(path) => {
+                            let file_name = path
+                                .file_name()
+                                .into_string()
+                                .unwrap()
+                                .parse::<usize>()
+                                .unwrap();
+                            files.push(file_name);
+                        }
+                        Err(_) => (),
+                    }
+                }
+                Some(files)
+            }
+            Err(_) => None,
+        }
     }
 
     /// This function returns a list of (fdnumber, OpenFile) tuples, if file descriptor
@@ -36,6 +54,28 @@ impl Process {
             open_files.push((fd, OpenFile::from_fd(self.pid, fd)?));
         }
         Some(open_files)
+    }
+
+    pub fn print(&self) {
+        match self.list_open_files() {
+            None => println!(
+                "Warning: could not inspect file descriptors for this process! \
+                    It might have exited just as we were about to look at its fd table, \
+                    or it might have exited a while ago and is waiting for the parent \
+                    to reap it."
+            ),
+            Some(open_files) => {
+                for (fd, file) in open_files {
+                    println!(
+                        "{:<4} {:<15} cursor: {:<4} {}",
+                        fd,
+                        format!("({})", file.access_mode),
+                        file.cursor,
+                        file.colorized_name(),
+                    );
+                }
+            }
+        }
     }
 }
 
