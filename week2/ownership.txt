@@ -5,7 +5,7 @@ fn main() {
     let ref1 = &s;
     let ref2 = &ref1;
     let ref3 = &ref2;
-    s = String::from("goodbye");
+    s = String::from("goodbye"); // Error: s has borrowed'
     println!("{}", ref3.to_uppercase());
 }
 ```
@@ -16,7 +16,7 @@ Example 2:
 ```
 fn drip_drop() -> &String {
     let s = String::from("hello world!");
-    return &s;
+    return &s; // Error: s is a local variable
 }
 ```
 
@@ -28,7 +28,7 @@ fn main() {
     let s1 = String::from("hello");
     let mut v = Vec::new();
     v.push(s1);
-    let s2: String = v[0];
+    let s2: String = v[0]; // Error: s2 has no Copy Trait
     println!("{}", s2);
 }
 ```
