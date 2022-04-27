@@ -9,5 +9,9 @@ fn main() {
     list.push_front("c".to_string());
     list.push_front("d".to_string());
     println!("{}", list);
-    assert_eq!(list.get_size(), 4);
+
+    let mut list2 = list.clone();
+    list2.push_front("e".to_string());
+    println!("list: {}", list);
+    println!("list2: {}", list2);
 }

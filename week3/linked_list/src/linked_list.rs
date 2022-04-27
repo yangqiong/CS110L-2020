@@ -20,6 +20,15 @@ impl<T> Node<T> {
     }
 }
 
+impl<T: Clone> Clone for Node<T> {
+    fn clone(&self) -> Node<T> {
+        Node {
+            value: self.value.clone(),
+            next: self.next.clone(),
+        }
+    }
+}
+
 impl<T> LinkedList<T> {
     pub fn new() -> LinkedList<T> {
         LinkedList {
@@ -72,6 +81,15 @@ impl<T> Drop for LinkedList<T> {
         let mut current = self.head.take();
         while let Some(mut node) = current {
             current = node.next.take();
+        }
+    }
+}
+
+impl<T: Clone> Clone for LinkedList<T> {
+    fn clone(&self) -> LinkedList<T> {
+        LinkedList {
+            head: self.head.clone(),
+            size: self.size,
         }
     }
 }
