@@ -14,4 +14,8 @@ fn main() {
     list2.push_front("e".to_string());
     println!("list: {}", list);
     println!("list2: {}", list2);
+
+    println!("list is equal to list2: {}", list == list2);
+    list2.pop_front();
+    println!("list is equal to list2: {}", list == list2);
 }
