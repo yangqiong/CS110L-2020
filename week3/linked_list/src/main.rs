@@ -18,4 +18,13 @@ fn main() {
     println!("list is equal to list2: {}", list == list2);
     list2.pop_front();
     println!("list is equal to list2: {}", list == list2);
+
+    for val in &list {
+        print!("{}", val);
+    }
+    println!("");
+    println!("original list : {}", list);
+
+    let mut v2 = list.into_iter();
+    println!("{:?}", v2.next());
 }
