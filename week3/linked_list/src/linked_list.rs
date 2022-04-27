@@ -132,3 +132,19 @@ impl<'a, T: Clone> IntoIterator for &'a LinkedList<T> {
         }
     }
 }
+
+pub trait ComputeNorm {
+    fn compute_norm(&self) -> f64 {
+        0.0
+    }
+}
+
+impl ComputeNorm for LinkedList<f64> {
+    fn compute_norm(&self) -> f64 {
+        let mut sq_sum = 0.0;
+        for x in self {
+            sq_sum += x * x;
+        }
+        sq_sum.sqrt()
+    }
+}
